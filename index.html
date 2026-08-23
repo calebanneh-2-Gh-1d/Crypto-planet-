@@ -9,33 +9,73 @@
             font-family: Arial, sans-serif;
             background-color: #0f172a;
             color: #ffffff;
+            margin: 0;
+            padding: 20px;
             text-align: center;
-            padding: 50px 20px;
         }
-        h1 {
+        h1 { color: #38bdf8; margin-top: 10px; }
+        p { color: #94a3b8; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+        .card {
+            background-color: #1e293b;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #334155;
+        }
+        .card h3 { margin: 0 0 5px 0; font-size: 0.9rem; color: #94a3b8; }
+        .card p { margin: 0; font-size: 1.2rem; font-weight: bold; color: #38bdf8; }
+        .loss { color: #ef4444 !important; }
+
+        .section-title {
+            text-align: left;
             color: #38bdf8;
-            font-size: 2.5rem;
-        }
-        p {
-            font-size: 1.2rem;
-            color: #94a3b8;
-        }
-        .btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 24px;
-            background-color: #38bdf8;
-            color: #0f172a;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 8px;
+            margin-top: 30px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to Crypto Planet 🚀</h1>
-    <p>Your portal for crypto insights and market updates.</p>
-    <a href="#" class="btn">Explore Platform</a>
+
+    <!-- Top Ticker Widget (Live Prices) -->
+    <script src="https://widgets.coingecko.com/gecko-coin-price-marquee-widget.js"></script>
+    <gecko-coin-price-marquee-widget coin-ids="bitcoin,ethereum,solana,dogecoin,pepe,shiba-inu" currency="usd" background-color="#1e293b" locale="en"></gecko-coin-price-marquee-widget>
+
+    <h1>Crypto Planet 🚀</h1>
+    <p>Live Market Overview & Daily Analytics</p>
+
+    <!-- Daily Market Analytics Section -->
+    <div class="stats-grid">
+        <div class="card">
+            <h3>24h Trading Volume</h3>
+            <p>$85.4 Billion</p>
+        </div>
+        <div class="card">
+            <h3>Active Traders (Est.)</h3>
+            <p>10M+ Daily</p>
+        </div>
+        <div class="card">
+            <h3>24h Liquidations (Lost)</h3>
+            <p class="loss">-$185.2 Million</p>
+        </div>
+        <div class="card">
+            <h3>BTC Market Dominance</h3>
+            <p>54.2%</p>
+        </div>
+    </div>
+
+    <!-- Live Coin Heatmap Widget -->
+    <h3 class="section-title">Market Overview</h3>
+    <script src="https://widgets.coingecko.com/gecko-coin-heatmap-widget.js"></script>
+    <gecko-coin-heatmap-widget top="20" locale="en" background-color="#1e293b"></gecko-coin-heatmap-widget>
+
 </body>
 </html>
+
 
