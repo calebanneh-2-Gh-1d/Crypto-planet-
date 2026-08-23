@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Planet</title>
+    <title>Crypto Planet 🚀</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,69 +13,99 @@
             padding: 20px;
             text-align: center;
         }
-        h1 { color: #38bdf8; margin-top: 10px; }
-        p { color: #94a3b8; }
-        
-        .stats-grid {
+        h1 { color: #38bdf8; }
+        .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
-            margin: 25px 0;
+            margin-top: 20px;
         }
         .card {
             background-color: #1e293b;
             padding: 15px;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid #334155;
         }
-        .card h3 { margin: 0 0 5px 0; font-size: 0.9rem; color: #94a3b8; }
-        .card p { margin: 0; font-size: 1.2rem; font-weight: bold; color: #38bdf8; }
-        .loss { color: #ef4444 !important; }
-
-        .section-title {
-            text-align: left;
-            color: #38bdf8;
-            margin-top: 30px;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 8px;
-        }
+        .price { font-size: 1.4rem; font-weight: bold; color: #38bdf8; }
+        .change { font-size: 0.9rem; }
+        .green { color: #22c55e; }
+        .red { color: #ef4444; }
     </style>
 </head>
 <body>
 
-    <!-- Top Ticker Widget (Live Prices) -->
-    <script src="https://widgets.coingecko.com/gecko-coin-price-marquee-widget.js"></script>
-    <gecko-coin-price-marquee-widget coin-ids="bitcoin,ethereum,solana,dogecoin,pepe,shiba-inu" currency="usd" background-color="#1e293b" locale="en"></gecko-coin-price-marquee-widget>
+    <h1>Crypto Planet Live 🚀</h1>
+    <p>Live prices updated via CoinGecko API</p>
 
-    <h1>Crypto Planet 🚀</h1>
-    <p>Live Market Overview & Daily Analytics</p>
-
-    <!-- Daily Market Analytics Section -->
-    <div class="stats-grid">
+    <div class="grid">
         <div class="card">
-            <h3>24h Trading Volume</h3>
-            <p>$85.4 Billion</p>
+            <h3>Bitcoin (BTC)</h3>
+            <div class="price" id="btc-price">Loading...</div>
+            <div class="change" id="btc-change">--</div>
         </div>
         <div class="card">
-            <h3>Active Traders (Est.)</h3>
-            <p>10M+ Daily</p>
+            <h3>Ethereum (ETH)</h3>
+            <div class="price" id="eth-price">Loading...</div>
+            <div class="change" id="eth-change">--</div>
         </div>
         <div class="card">
-            <h3>24h Liquidations (Lost)</h3>
-            <p class="loss">-$185.2 Million</p>
+            <h3>Solana (SOL)</h3>
+            <div class="price" id="sol-price">Loading...</div>
+            <div class="change" id="sol-change">--</div>
         </div>
         <div class="card">
-            <h3>BTC Market Dominance</h3>
-            <p>54.2%</p>
+            <h3>Pepe (PEPE)</h3>
+            <div class="price" id="pepe-price">Loading...</div>
+            <div class="change" id="pepe-change">--</div>
         </div>
     </div>
 
-    <!-- Live Coin Heatmap Widget -->
-    <h3 class="section-title">Market Overview</h3>
-    <script src="https://widgets.coingecko.com/gecko-coin-heatmap-widget.js"></script>
-    <gecko-coin-heatmap-widget top="20" locale="en" background-color="#1e293b"></gecko-coin-heatmap-widget>
+    <script>
+        async function fetchCryptoData() {
+            try {
+                // Fetching real-time market data from CoinGecko's free REST API
+                const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,pepe&vs_currencies=usd&include_24hr_change=true');
+                const data = await res.json();
 
+                // BTC Update
+                document.getElementById('btc-price').innerText = '$' + data.bitcoin.usd.toLocaleString();
+                updateChange('btc-change', data.bitcoin.usd_24h_change);
+
+                // ETH Update
+                document.getElementById('eth-price').innerText = '$' + data.ethereum.usd.toLocaleString();
+                updateChange('eth-change', data.ethereum.usd_24h_change);
+
+                // SOL Update
+                document.getElementById('sol-price').innerText = '$' + data.solana.usd.toLocaleString();
+                updateChange('sol-change', data.solana.usd_24h_change);
+
+                // PEPE Update
+                document.getElementById('pepe-price').innerText = '$' + data.pepe.usd;
+                updateChange('pepe-change', data.pepe.usd_24h_change);
+            } catch (error) {
+                console.error('Error fetching crypto data:', error);
+            }
+        }
+
+        function updateChange(elementId, changeVal) {
+            const el = document.getElementById(elementId);
+            const formatted = changeVal.toFixed(2) + '%';
+            if (changeVal >= 0) {
+                el.innerText = '+' + formatted;
+                el.className = 'change green';
+            } else {
+                el.innerText = formatted;
+                el.className = 'change red';
+            }
+        }
+
+        // Fetch prices immediately on load
+        fetchCryptoData();
+        // Automatically refresh every 30 seconds
+        setInterval(fetchCryptoData, 30000);
+    </script>
 </body>
 </html>
+
 
 
