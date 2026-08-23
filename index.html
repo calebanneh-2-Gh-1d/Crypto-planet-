@@ -3,80 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Planet Hub</title>
+    <title>Crypto Planet Hub 🚀</title>
+    <!-- Jupiter Swap Terminal Script -->
+    <script src="https://terminal.jup.ag/main-v2.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #0f172a;
             color: #ffffff;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
         }
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 20px;
+            padding-bottom: 15px;
             border-bottom: 1px solid #334155;
+            margin-bottom: 15px;
         }
         h1 { color: #38bdf8; margin: 0; font-size: 1.5rem; }
-        .wallet-btn {
-            background-color: #38bdf8;
-            color: #0f172a;
-            border: none;
-            padding: 10px 18px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
+        .subtitle { color: #94a3b8; margin: 0; font-size: 0.9rem; }
+        
+        /* Live Prices Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
         }
-        .chart-container {
-            height: 450px;
-            margin-top: 25px;
-            border-radius: 12px;
+        .card {
+            background-color: #1e293b;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+        .card h3 { margin: 0 0 5px 0; font-size: 0.8rem; color: #94a3b8; }
+        .price { font-size: 1.05rem; font-weight: bold; color: #38bdf8; }
+
+        /* Main Dashboard Layout */
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .chart-section {
+            flex: 2;
+            min-width: 300px;
+            height: 480px;
+            border-radius: 10px;
             overflow: hidden;
             border: 1px solid #334155;
+        }
+        .swap-section {
+            flex: 1;
+            min-width: 320px;
+            max-width: 420px;
+            height: 480px;
+            background: #1e293b;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #integrated-terminal {
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Crypto Planet 🚀</h1>
-        <button class="wallet-btn" onclick="connectWallet()">Connect Wallet</button>
+        <div>
+            <h1>Crypto Planet 🚀</h1>
+            <p class="subtitle">All-In-One Live Dashboard & DEX Swap</p>
+        </div>
     </header>
 
-    <!-- TradingView Live Interactive Chart -->
-    <div class="chart-container">
-        <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=BINANCE%3ABTCUSDT&interval=D&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC" width="100%" height="100%" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
+    <!-- Top Live Price Bar -->
+    <div class="stats-grid">
+        <div class="card">
+            <h3>Bitcoin (BTC)</h3>
+            <div class="price" id="btc-price">Loading...</div>
+        </div>
+        <div class="card">
+            <h3>Ethereum (ETH)</h3>
+            <div class="price" id="eth-price">Loading...</div>
+        </div>
+        <div class="card">
+            <h3>Solana (SOL)</h3>
+            <div class="price" id="sol-price">Loading...</div>
+        </div>
+        <div class="card">
+            <h3>Pepe (PEPE)</h3>
+            <div class="price" id="pepe-price">Loading...</div>
+        </div>
     </div>
 
+    <!-- Interactive Dashboard: Chart + Swap Terminal -->
+    <div class="main-container">
+        <div class="chart-section">
+            <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=BINANCE%3ABTCUSDT&interval=D&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC" width="100%" height="100%" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
+        </div>
+
+        <div class="swap-section">
+            <div id="integrated-terminal"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript Execution Scripts -->
     <script>
-        async function connectWallet() {
-            // Checks for injected Web3 provider (Phantom, OKX, Trust Wallet)
-            if (window.solana && window.solana.isPhantom) {
-                try {
-                    const resp = await window.solana.connect();
-                    const pubKey = resp.publicKey.toString();
-                    alert("Wallet Connected: " + pubKey.substring(0, 4) + "..." + pubKey.substring(pubKey.length - 4));
-                } catch (err) {
-                    alert("User rejected connection request.");
-                }
-            } else if (window.ethereum) {
-                try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    const account = accounts[0];
-                    alert("Wallet Connected: " + account.substring(0, 4) + "..." + account.substring(account.length - 4));
-                } catch (err) {
-                    alert("User rejected connection request.");
-                }
-            } else {
-                alert("No Web3 wallet detected! Please install Phantom, OKX, or Trust Wallet extension.");
+        // 1. Fetch Real-Time Crypto Prices via CoinGecko API
+        async function fetchPrices() {
+            try {
+                const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,pepe&vs_currencies=usd');
+                const data = await res.json();
+
+                document.getElementById('btc-price').innerText = '$' + data.bitcoin.usd.toLocaleString();
+                document.getElementById('eth-price').innerText = '$' + data.ethereum.usd.toLocaleString();
+                document.getElementById('sol-price').innerText = '$' + data.solana.usd.toLocaleString();
+                document.getElementById('pepe-price').innerText = '$' + data.pepe.usd;
+            } catch (err) {
+                console.error("API Fetch Error:", err);
             }
         }
+
+        fetchPrices();
+        setInterval(fetchPrices, 30000); // Auto-refresh prices every 30 seconds
+
+        // 2. Initialize On-Chain Token Swap Terminal
+        window.addEventListener('load', function() {
+            if (window.Jupiter) {
+                window.Jupiter.init({
+                    displayMode: "integrated",
+                    integratedTargetId: "integrated-terminal",
+                    endpoint: "https://api.mainnet-beta.solana.com",
+                    formProps: {
+                        fixedInputMint: false,
+                        fixedOutputMint: false
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>
+
 
 
 
