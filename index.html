@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Planet 🚀</title>
+    <title>Crypto Planet Hub</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,99 +13,71 @@
             padding: 20px;
             text-align: center;
         }
-        h1 { color: #38bdf8; }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #334155;
         }
-        .card {
-            background-color: #1e293b;
-            padding: 15px;
+        h1 { color: #38bdf8; margin: 0; font-size: 1.5rem; }
+        .wallet-btn {
+            background-color: #38bdf8;
+            color: #0f172a;
+            border: none;
+            padding: 10px 18px;
+            font-weight: bold;
             border-radius: 8px;
+            cursor: pointer;
+        }
+        .chart-container {
+            height: 450px;
+            margin-top: 25px;
+            border-radius: 12px;
+            overflow: hidden;
             border: 1px solid #334155;
         }
-        .price { font-size: 1.4rem; font-weight: bold; color: #38bdf8; }
-        .change { font-size: 0.9rem; }
-        .green { color: #22c55e; }
-        .red { color: #ef4444; }
     </style>
 </head>
 <body>
 
-    <h1>Crypto Planet Live 🚀</h1>
-    <p>Live prices updated via CoinGecko API</p>
+    <header>
+        <h1>Crypto Planet 🚀</h1>
+        <button class="wallet-btn" onclick="connectWallet()">Connect Wallet</button>
+    </header>
 
-    <div class="grid">
-        <div class="card">
-            <h3>Bitcoin (BTC)</h3>
-            <div class="price" id="btc-price">Loading...</div>
-            <div class="change" id="btc-change">--</div>
-        </div>
-        <div class="card">
-            <h3>Ethereum (ETH)</h3>
-            <div class="price" id="eth-price">Loading...</div>
-            <div class="change" id="eth-change">--</div>
-        </div>
-        <div class="card">
-            <h3>Solana (SOL)</h3>
-            <div class="price" id="sol-price">Loading...</div>
-            <div class="change" id="sol-change">--</div>
-        </div>
-        <div class="card">
-            <h3>Pepe (PEPE)</h3>
-            <div class="price" id="pepe-price">Loading...</div>
-            <div class="change" id="pepe-change">--</div>
-        </div>
+    <!-- TradingView Live Interactive Chart -->
+    <div class="chart-container">
+        <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=BINANCE%3ABTCUSDT&interval=D&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC" width="100%" height="100%" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
     </div>
 
     <script>
-        async function fetchCryptoData() {
-            try {
-                // Fetching real-time market data from CoinGecko's free REST API
-                const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,pepe&vs_currencies=usd&include_24hr_change=true');
-                const data = await res.json();
-
-                // BTC Update
-                document.getElementById('btc-price').innerText = '$' + data.bitcoin.usd.toLocaleString();
-                updateChange('btc-change', data.bitcoin.usd_24h_change);
-
-                // ETH Update
-                document.getElementById('eth-price').innerText = '$' + data.ethereum.usd.toLocaleString();
-                updateChange('eth-change', data.ethereum.usd_24h_change);
-
-                // SOL Update
-                document.getElementById('sol-price').innerText = '$' + data.solana.usd.toLocaleString();
-                updateChange('sol-change', data.solana.usd_24h_change);
-
-                // PEPE Update
-                document.getElementById('pepe-price').innerText = '$' + data.pepe.usd;
-                updateChange('pepe-change', data.pepe.usd_24h_change);
-            } catch (error) {
-                console.error('Error fetching crypto data:', error);
-            }
-        }
-
-        function updateChange(elementId, changeVal) {
-            const el = document.getElementById(elementId);
-            const formatted = changeVal.toFixed(2) + '%';
-            if (changeVal >= 0) {
-                el.innerText = '+' + formatted;
-                el.className = 'change green';
+        async function connectWallet() {
+            // Checks for injected Web3 provider (Phantom, OKX, Trust Wallet)
+            if (window.solana && window.solana.isPhantom) {
+                try {
+                    const resp = await window.solana.connect();
+                    const pubKey = resp.publicKey.toString();
+                    alert("Wallet Connected: " + pubKey.substring(0, 4) + "..." + pubKey.substring(pubKey.length - 4));
+                } catch (err) {
+                    alert("User rejected connection request.");
+                }
+            } else if (window.ethereum) {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const account = accounts[0];
+                    alert("Wallet Connected: " + account.substring(0, 4) + "..." + account.substring(account.length - 4));
+                } catch (err) {
+                    alert("User rejected connection request.");
+                }
             } else {
-                el.innerText = formatted;
-                el.className = 'change red';
+                alert("No Web3 wallet detected! Please install Phantom, OKX, or Trust Wallet extension.");
             }
         }
-
-        // Fetch prices immediately on load
-        fetchCryptoData();
-        // Automatically refresh every 30 seconds
-        setInterval(fetchCryptoData, 30000);
     </script>
 </body>
 </html>
+
 
 
 
