@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Planet | Portal & Trading Hub</title>
+    <!-- Jupiter Swap Terminal Script -->
     <script src="https://terminal.jup.ag/main-v2.js"></script>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #0b0f19; color: #ffffff; margin: 0; padding: 0; }
         header { background-color: #111827; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f2937; }
         .logo { color: #38bdf8; font-size: 1.5rem; font-weight: bold; margin: 0; }
         .nav-links a { color: #9ca3af; text-decoration: none; margin-left: 20px; font-size: 0.95rem; }
-        .nav-links a:hover { color: #38bdf8; }
         
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-top: 20px; }
@@ -18,13 +18,11 @@
         .card { background-color: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 15px; }
         .section-title { font-size: 1.1rem; color: #38bdf8; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #1f2937; padding-bottom: 8px; }
         
-        .chart-box { height: 450px; border-radius: 8px; overflow: hidden; }
-        .swap-box { height: 450px; }
+        .chart-box { height: 480px; border-radius: 8px; overflow: hidden; }
+        .swap-box { height: 480px; }
         
         .news-item { padding: 10px 0; border-bottom: 1px solid #1f2937; text-align: left; }
-        .news-item:last-child { border-bottom: none; }
         .news-title { font-weight: bold; color: #f3f4f6; text-decoration: none; font-size: 0.95rem; display: block; }
-        .news-title:hover { color: #38bdf8; }
         .news-time { font-size: 0.75rem; color: #6b7280; }
 
         @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }
@@ -32,13 +30,11 @@
 </head>
 <body>
 
-    <!-- Header Navigation -->
     <header>
         <div class="logo">Crypto Planet 🚀</div>
         <div class="nav-links">
-            <a href="#markets">Markets</a>
-            <a href="#trade">Trade</a>
-            <a href="#news">News</a>
+            <a href="#trade">Trade & Search</a>
+            <a href="#news">Market News</a>
         </div>
     </header>
 
@@ -48,35 +44,34 @@
 
     <div class="container">
         
-        <!-- Main Trading & Swap Section -->
         <div class="dashboard-grid" id="trade">
-            <!-- Dynamic TradingView Chart -->
+            <!-- Dynamic TradingView Chart with FULL SEARCH ENABLED -->
             <div class="card">
-                <h3 class="section-title">Live Market Analysis (BTC/USDT)</h3>
+                <h3 class="section-title">Live Market Chart (Tap ticker top-left to search any coin)</h3>
                 <div class="chart-box">
-                    <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=BINANCE%3ABTCUSDT&interval=D&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC" width="100%" height="100%" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
+                    <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=BINANCE%3ABTCUSDT&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC" width="100%" height="100%" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
                 </div>
             </div>
 
-            <!-- Instant Token Swap Terminal -->
+            <!-- On-Chain Token Swap (Searchable via Mint or Token Name) -->
             <div class="card">
                 <h3 class="section-title">Instant Token Swap</h3>
                 <div class="swap-box" id="integrated-terminal"></div>
             </div>
         </div>
 
-        <!-- Crypto News Section -->
+        <!-- Live News Feed -->
         <div style="margin-top: 25px;" id="news">
             <div class="card">
-                <h3 class="section-title">Latest Crypto & Market News</h3>
-                <div id="news-container">Loading latest news feeds...</div>
+                <h3 class="section-title">Latest Crypto Headlines</h3>
+                <div id="news-container">Loading news...</div>
             </div>
         </div>
 
     </div>
 
     <script>
-        // Initialize On-Chain Jupiter Swap
+        // Initialize On-Chain Jupiter Swap (allows searching all Solana meme coins)
         window.addEventListener('load', function() {
             if (window.Jupiter) {
                 window.Jupiter.init({
@@ -88,12 +83,12 @@
             }
         });
 
-        // Fetch Live Crypto News Feed
+        // Fetch Live Market News
         async function fetchCryptoNews() {
             try {
                 const res = await fetch('https://min-api.cryptocompare.com/data/v2/news/?lang=EN');
                 const data = await res.json();
-                const articles = data.Data.slice(0, 5); // Display top 5 news items
+                const articles = data.Data.slice(0, 5);
                 
                 let html = '';
                 articles.forEach(item => {
@@ -107,7 +102,7 @@
                 });
                 document.getElementById('news-container').innerHTML = html;
             } catch (err) {
-                document.getElementById('news-container').innerText = 'Unable to load news at this time.';
+                document.getElementById('news-container').innerText = 'Unable to load news.';
             }
         }
 
@@ -115,6 +110,7 @@
     </script>
 </body>
 </html>
+
 
 
 
