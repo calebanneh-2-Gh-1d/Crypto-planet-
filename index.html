@@ -3,33 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Planet | Portal & Trading Hub</title>
-    <!-- Jupiter Swap Terminal Script -->
-    <script src="https://terminal.jup.ag/main-v2.js"></script>
+    <title>Crypto Planet | All-In-One Live Hub</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #0b0f19; color: #ffffff; margin: 0; padding: 0; }
-        header { background-color: #111827; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f2937; }
-        .logo { color: #38bdf8; font-size: 1.5rem; font-weight: bold; margin: 0; }
-        .nav-links a { color: #9ca3af; text-decoration: none; margin-left: 20px; font-size: 0.95rem; }
-        
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-top: 20px; }
-        
-        .card { background-color: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 15px; }
-        .section-title { font-size: 1.1rem; color: #38bdf8; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #1f2937; padding-bottom: 8px; }
-        
-        .chart-box { height: 480px; border-radius: 8px; overflow: hidden; }
-        .swap-box { height: 480px; }
-        
-        .news-item { padding: 10px 0; border-bottom: 1px solid #1f2937; text-align: left; }
-        .news-title { font-weight: bold; color: #f3f4f6; text-decoration: none; font-size: 0.95rem; display: block; }
-        .news-time { font-size: 0.75rem; color: #6b7280; }
+        * {
+            box-sizing: border-box;
+        }
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: #0b0f19; 
+            color: #ffffff; 
+            margin: 0; 
+            padding: 0; 
+        }
+        header { 
+            background-color: #111827; 
+            padding: 15px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #1f2937; 
+        }
+        .logo { 
+            color: #38bdf8; 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+            margin: 0; 
+        }
+        .nav-links a { 
+            color: #9ca3af; 
+            text-decoration: none; 
+            margin-left: 20px; 
+            font-size: 0.95rem; 
+        }
+        .nav-links a:hover { 
+            color: #38bdf8; 
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+        .stats-card {
+            background-color: #111827;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #1f2937;
+            text-align: center;
+        }
+        .stats-card h4 {
+            margin: 0 0 5px 0;
+            font-size: 0.85rem;
+            color: #9ca3af;
+        }
+        .price-val {
+            font-weight: bold;
+            color: #38bdf8;
+            font-size: 1.1rem;
+        }
+        .dashboard-grid { 
+            display: grid; 
+            grid-template-columns: 2fr 1fr; 
+            gap: 20px; 
+        }
+        .card { 
+            background-color: #111827; 
+            border: 1px solid #1f2937; 
+            border-radius: 12px; 
+            padding: 15px; 
+        }
+        .section-title { 
+            font-size: 1.1rem; 
+            color: #38bdf8; 
+            margin-top: 0; 
+            margin-bottom: 15px; 
+            border-bottom: 1px solid #1f2937; 
+            padding-bottom: 8px; 
+        }
+        .tradingview-widget-container { 
+            height: 480px; 
+            width: 100%; 
+        }
+        .swap-box { 
+            height: 480px; 
+            border-radius: 8px; 
+            overflow: hidden; 
+        }
+        .news-item { 
+            padding: 12px 0; 
+            border-bottom: 1px solid #1f2937; 
+            text-align: left; 
+        }
+        .news-item:last-child {
+            border-bottom: none;
+        }
+        .news-title { 
+            font-weight: bold; 
+            color: #f3f4f6; 
+            text-decoration: none; 
+            font-size: 0.95rem; 
+            display: block; 
+        }
+        .news-title:hover { 
+            color: #38bdf8; 
+        }
+        .news-time { 
+            font-size: 0.75rem; 
+            color: #6b7280; 
+            margin-top: 4px;
+            display: block;
+        }
 
-        @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .dashboard-grid { 
+                grid-template-columns: 1fr; 
+            } 
+        }
     </style>
 </head>
 <body>
 
+    <!-- Header Navigation -->
     <header>
         <div class="logo">Crypto Planet 🚀</div>
         <div class="nav-links">
@@ -38,52 +138,106 @@
         </div>
     </header>
 
-    <!-- Top Live Price Ticker -->
+    <!-- Top Live Price Marquee Widget -->
     <script src="https://widgets.coingecko.com/gecko-coin-price-marquee-widget.js"></script>
-    <gecko-coin-price-marquee-widget coin-ids="bitcoin,ethereum,solana,pepe,dogecoin,bonk" currency="usd" background-color="#111827" locale="en"></gecko-coin-price-marquee-widget>
+    <gecko-coin-price-marquee-widget coin-ids="bitcoin,ethereum,solana,tron,pepe,dogecoin,bonk" currency="usd" background-color="#111827" locale="en"></gecko-coin-price-marquee-widget>
 
     <div class="container">
         
+        <!-- Direct API Price Bar -->
+        <div class="stats-grid">
+            <div class="stats-card">
+                <h4>Bitcoin (BTC)</h4>
+                <div class="price-val" id="btc-price">Loading...</div>
+            </div>
+            <div class="stats-card">
+                <h4>Ethereum (ETH)</h4>
+                <div class="price-val" id="eth-price">Loading...</div>
+            </div>
+            <div class="stats-card">
+                <h4>Solana (SOL)</h4>
+                <div class="price-val" id="sol-price">Loading...</div>
+            </div>
+            <div class="stats-card">
+                <h4>TRON (TRX)</h4>
+                <div class="price-val" id="trx-price">Loading...</div>
+            </div>
+            <div class="stats-card">
+                <h4>Pepe (PEPE)</h4>
+                <div class="price-val" id="pepe-price">Loading...</div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Section -->
         <div class="dashboard-grid" id="trade">
-            <!-- Dynamic TradingView Chart with FULL SEARCH ENABLED -->
+            
+            <!-- Dynamic TradingView Chart with Search -->
             <div class="card">
-                <h3 class="section-title">Live Market Chart (Tap ticker top-left to search any coin)</h3>
-                <div class="chart-box">
-                    <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=BINANCE%3ABTCUSDT&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC" width="100%" height="100%" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
+                <h3 class="section-title">Live Market Analysis (Tap ticker top-left to search any coin)</h3>
+                <div class="tradingview-widget-container">
+                    <div id="tradingview_advanced_chart" style="height:100%;width:100%;"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                    <script type="text/javascript">
+                    new TradingView.widget({
+                        "autosize": true,
+                        "symbol": "BINANCE:BTCUSDT",
+                        "interval": "D",
+                        "timezone": "Etc/UTC",
+                        "theme": "dark",
+                        "style": "1",
+                        "locale": "en",
+                        "toolbar_bg": "#f1f3f6",
+                        "enable_publishing": false,
+                        "allow_symbol_change": true,
+                        "container_id": "tradingview_advanced_chart"
+                    });
+                    </script>
                 </div>
             </div>
 
-            <!-- On-Chain Token Swap (Searchable via Mint or Token Name) -->
+            <!-- Multi-Chain Cross-Chain Swap (BTC, TRX, SOL, ETH, Tokens) -->
             <div class="card">
-                <h3 class="section-title">Instant Token Swap</h3>
-                <div class="swap-box" id="integrated-terminal"></div>
+                <h3 class="section-title">Multi-Chain Instant Swap</h3>
+                <div class="swap-box">
+                    <iframe src="https://changenow.io/embeds/exchange-widget/v2/widget.html?FAQ=true&amount=0.1&amountEnabled=true&backgroundColor=111827&darkMode=true&from=btc&fromThemed=true&headerColor=38bdf8&id=648efebff85226&isRefundAddressVisible=false&linkWay=http&locales=true&logo=true&primaryColor=38bdf8&to=sol&toThemed=true&toThemedColor=38bdf8" height="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+                </div>
             </div>
+
         </div>
 
         <!-- Live News Feed -->
         <div style="margin-top: 25px;" id="news">
             <div class="card">
-                <h3 class="section-title">Latest Crypto Headlines</h3>
-                <div id="news-container">Loading news...</div>
+                <h3 class="section-title">Latest Crypto & Market News</h3>
+                <div id="news-container">Loading latest news feeds...</div>
             </div>
         </div>
 
     </div>
 
+    <!-- JavaScript Engine -->
     <script>
-        // Initialize On-Chain Jupiter Swap (allows searching all Solana meme coins)
-        window.addEventListener('load', function() {
-            if (window.Jupiter) {
-                window.Jupiter.init({
-                    displayMode: "integrated",
-                    integratedTargetId: "integrated-terminal",
-                    endpoint: "https://api.mainnet-beta.solana.com",
-                    formProps: { fixedInputMint: false, fixedOutputMint: false }
-                });
-            }
-        });
+        // 1. Fetch Real-Time Crypto Prices via CoinGecko REST API
+        async function fetchPrices() {
+            try {
+                const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,tron,pepe&vs_currencies=usd');
+                const data = await res.json();
 
-        // Fetch Live Market News
+                document.getElementById('btc-price').innerText = '$' + data.bitcoin.usd.toLocaleString();
+                document.getElementById('eth-price').innerText = '$' + data.ethereum.usd.toLocaleString();
+                document.getElementById('sol-price').innerText = '$' + data.solana.usd.toLocaleString();
+                document.getElementById('trx-price').innerText = '$' + data.tron.usd.toLocaleString();
+                document.getElementById('pepe-price').innerText = '$' + data.pepe.usd;
+            } catch (err) {
+                console.error("API Fetch Error:", err);
+            }
+        }
+
+        // Run API price fetch on load and refresh automatically every 30 seconds
+        fetchPrices();
+        setInterval(fetchPrices, 30000);
+
+        // 2. Fetch Live Market News Headlines
         async function fetchCryptoNews() {
             try {
                 const res = await fetch('https://min-api.cryptocompare.com/data/v2/news/?lang=EN');
@@ -102,7 +256,7 @@
                 });
                 document.getElementById('news-container').innerHTML = html;
             } catch (err) {
-                document.getElementById('news-container').innerText = 'Unable to load news.';
+                document.getElementById('news-container').innerText = 'Unable to load news at this time.';
             }
         }
 
@@ -110,6 +264,7 @@
     </script>
 </body>
 </html>
+
 
 
 
